@@ -1,0 +1,93 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function DomainResults() {
+  const [domain, setDomain] = useState("");
+  const [available, setAvailable] = useState(false);
+  const [searched, setSearched] = useState(false);
+
+  const handleSearch = () => {
+    setSearched(true);
+    // Simulate availability check
+    setAvailable(domain.trim().endsWith(".com"));
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-10">
+      {/* Input Field */}
+      <div className="flex gap-2 mb-4">
+        <input
+          type="text"
+          value={domain}
+          onChange={(e) => setDomain(e.target.value)}
+          placeholder="Enter your domain name"
+          className="flex-1 border rounded-lg px-4 py-2"
+        />
+        <button
+          onClick={handleSearch}
+          className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
+        >
+          Search
+        </button>
+      </div>
+
+      {/* Availability Message */}
+      {searched && (
+        <div className="text-center text-lg font-medium mt-2">
+          {available ? (
+            <p className="text-green-600">✅ Domain is available!</p>
+          ) : (
+            <p className="text-red-500">❌ Domain is not available.</p>
+          )}
+        </div>
+      )}
+
+      {/* Expandable Section */}
+      <AnimatePresence>
+        {available && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mt-8"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[
+                {
+                  title: "Starter",
+                  price: "$5/year",
+                  features: "Basic DNS, 1 alias",
+                },
+                {
+                  title: "Business",
+                  price: "$10/year",
+                  features: "Priority support, 5 aliases",
+                },
+                {
+                  title: "Pro",
+                  price: "$20/year",
+                  features: "Full DNS control, unlimited aliases",
+                },
+              ].map((plan, i) => (
+                <div
+                  key={i}
+                  className="border border-gray-300 rounded-xl p-4 text-center shadow-sm hover:shadow-md transition"
+                >
+                  <h3 className="text-xl font-semibold mb-1">{plan.title}</h3>
+                  <p className="text-blue-600 font-medium">{plan.price}</p>
+                  <p className="text-sm text-gray-600 mt-2">{plan.features}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-center mt-8">
+              <button className="bg-blue-600 text-white text-lg px-8 py-3 rounded-full hover:bg-blue-700">
+                Proceed
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
